@@ -1,0 +1,51 @@
+Dashboard (0x100) - controls all the nodes
+Headlight (0x101) - controls headlight
+Left Indicator (0x102) - controls left indicator
+Right Indicator (0x103) - controls right indicator
+Coolant Temperature (0x104) - monitors coolant temperature
+Engine (0x097) - controls engine(rpm)
+Door (0x098) - monitors door status
+Seat Belt (0x099) - monitors seat belt status
+
+When the engine is started, dashboard will request the status of door and seat belt nodes with the help 
+of rtr messages
+If the status is received 'not ok', dashboard will indicate  the respective warning about the nodes
+If the status is received 'ok', the car will start
+
+To start the car, a message is sent to engine node to start the engine. After starting the engine, 
+the engine node will send the rpm information of engine to the dashboard.
+Coolant temperature node will send the temperature information of the coolant to the dashboard.
+
+If the user requests to put indicators or headlight on, the dashboard will send the message 
+to the respective node to turn on the indicators or headlight. 
+
+Node Functions
+Headlight node - controls headlight
+    -Receives the message, check it with '1' to turn on the headlight and '0' to turn off the headlight 
+Left Indicator node - controls left indicator
+    -Receives the message, check it with '1' to turn on the left indicator and '0' to turn off the left indicator
+Right Indicator node - controls right indicator
+    -Receives the message, check it with '1' to turn on the right indicator and '0' to turn off the right indicator
+Door Closed node - monitors door status
+    -When the engine started, a rtr frame is sent to door node to check the status.
+    -If the door closed, the door node should send status as 'ok' (0)
+    -If the door is not closed, the door node should send status as 'not ok' (1)
+    -when the engine is on and door not closed, ring the buzzer
+Seat Belt node - monitors seat belt status
+    -When the engine started, a rtr frame is sent to seat belt node to check the status.
+    -If the seat belt is fastened, the seat belt node should send status as 'ok' (0)
+    -If the seat belt is not fastened, the seat belt node should send status as 'not ok' (1)
+    -when the engine is on and seat belt not fastened, ring the buzzer
+Engine node - controls engine
+    -Receives the engine start message from dashboard, check it with '1' to start the engine and '0' to stop the engine
+    -Sends rpm data to dashboard
+Coolant Temperature node - monitors coolant temperature
+    -Sends temperature data to dashboard
+Dashboard node - controls all the nodes
+    -The user starts the engine
+    -Requests the status of door and seat belt nodes with the help of rtr messages
+    -If the status is received 'ok', the car will start
+    -If the status is received 'not ok', dashboard will indicate the respective warning to the user about the nodes
+    -RPM and voltage displayed on the dashboard when the engine is started
+
+

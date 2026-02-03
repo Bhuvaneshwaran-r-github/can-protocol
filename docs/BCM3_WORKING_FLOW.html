@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCM3 Working Flow Documentation</title>
+    <style>
+        :root {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-card: #0f3460;
+            --text-primary: #eaeaea;
+            --text-secondary: #a0a0a0;
+            --accent: #e94560;
+            --accent2: #00d9ff;
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --error: #f87171;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--accent2);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+            margin: 2rem 0 1rem 0;
+        }
+
+        h3 {
+            color: var(--accent);
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card.info {
+            border-left-color: var(--accent2);
+        }
+
+        .card.success {
+            border-left-color: var(--success);
+        }
+
+        .card.warning {
+            border-left-color: var(--warning);
+        }
+
+        pre {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid #30363d;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        th {
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .flowchart {
+            background: #0d1117;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre;
+            border: 1px solid #30363d;
+        }
+
+        .highlight-green { color: #4ade80; }
+        .highlight-red { color: #f87171; }
+        .highlight-yellow { color: #fbbf24; }
+        .highlight-blue { color: #60a5fa; }
+        .highlight-purple { color: #c084fc; }
+        .highlight-cyan { color: #22d3ee; }
+
+        .step-number {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--accent), var(--accent2));
+            border-radius: 3px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 1rem 0 1rem 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 1.25rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent2);
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-success { background: rgba(74, 222, 128, 0.2); color: var(--success); }
+        .badge-warning { background: rgba(251, 191, 36, 0.2); color: var(--warning); }
+        .badge-error { background: rgba(248, 113, 113, 0.2); color: var(--error); }
+        .badge-info { background: rgba(0, 217, 255, 0.2); color: var(--accent2); }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        ul {
+            padding-left: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        li {
+            margin: 0.3rem 0;
+        }
+
+        .toc {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .toc a {
+            color: var(--accent2);
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .arrow {
+            color: var(--accent);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BCM3 Working Flow Documentation</h1>
+        <p class="subtitle">Body Control Module - CAN-based Indicator and Headlight Controller</p>
+
+        <div class="toc">
+            <h3>📑 Table of Contents</h3>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#phase1">Phase 1: Initialization</a></li>
+                <li><a href="#phase2">Phase 2: Main Event Loop</a></li>
+                <li><a href="#phase3">Phase 3: Blinking Sequence</a></li>
+                <li><a href="#phase4">Phase 4: Cleanup</a></li>
+                <li><a href="#timing">Timing Diagram Example</a></li>
+                <li><a href="#commands">CAN Commands Reference</a></li>
+            </ul>
+        </div>
+
+        <section id="overview">
+            <h2>📋 Overview</h2>
+            <div class="card info">
+                <p>This program is a <strong>Body Control Module (BCM)</strong> that:</p>
+                <ul>
+                    <li>Listens for CAN messages on <code>vcan0</code> interface</li>
+                    <li>Controls 3 GPIO outputs: Left Indicator, Right Indicator, Headlight</li>
+                    <li>Blinks indicators when active (500ms ON, 500ms OFF cycle)</li>
+                </ul>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3>State Variables</h3>
+                    <table>
+                        <tr><th>Variable</th><th>Values</th><th>Meaning</th></tr>
+                        <tr><td><code>ind_state</code></td><td>0</td><td>Both indicators OFF</td></tr>
+                        <tr><td></td><td>1</td><td>LEFT indicator BLINKING</td></tr>
+                        <tr><td></td><td>2</td><td>RIGHT indicator BLINKING</td></tr>
+                        <tr><td></td><td>3</td><td>HAZARD (Both indicators BLINKING)</td></tr>
+                        <tr><td><code>hl_state</code></td><td>0</td><td>Headlight OFF</td></tr>
+                        <tr><td></td><td>1</td><td>Headlight ON</td></tr>
+                    </table>
+                </div>
+                <div class="card">
+                    <h3>Constants</h3>
+                    <table>
+                        <tr><th>Constant</th><th>Value</th><th>Purpose</th></tr>
+                        <tr><td><code>BLINK_ON_TIME</code></td><td>500000 µs</td><td>Indicator ON duration</td></tr>
+                        <tr><td><code>BLINK_OFF_TIME</code></td><td>500000 µs</td><td>Indicator OFF duration</td></tr>
+                        <tr><td><code>POLL_TIMEOUT</code></td><td>100 ms</td><td>Max wait for CAN msg</td></tr>
+                        <tr><td><code>BCM_CAN_ID</code></td><td>0x101</td><td>CAN filter ID</td></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="phase1">
+            <h2>🚀 Phase 1: Initialization</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3><span class="step-number">1</span> Program Start</h3>
+                    <div class="card">
+                        <p><code>main()</code> called - Entry point of the program</p>
+                        <p>Declares variables:</p>
+                        <ul>
+                            <li><code>fds[1]</code> - poll structure for monitoring CAN socket</li>
+                            <li><code>nfds = 1</code> - monitoring 1 file descriptor</li>
+                            <li><code>ifname = "vcan0"</code> - CAN interface name</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <h3><span class="step-number">2</span> Initialize CAN Socket</h3>
+                    <div class="card">
+                        <p><code>initialize_can_socket("vcan0")</code></p>
+                        <pre><code>1. socket(PF_CAN, SOCK_RAW, CAN_RAW)     → Create raw CAN socket
+2. ioctl(can_socket, SIOCGIFINDEX, &ifr) → Get interface index
+3. bind(can_socket, &addr, sizeof(addr)) → Bind to vcan0
+4. setsockopt(..., CAN_RAW_FILTER, ...)  → Filter: Only CAN ID 0x101</code></pre>
+                        <p>Returns: <span class="badge badge-success">0 (success)</span> or <span class="badge badge-error">-1 (failure)</span></p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <h3><span class="step-number">3</span> Initialize GPIO</h3>
+                    <div class="card">
+                        <p><code>initialize_gpio()</code></p>
+                        <pre><code>1. gpiod_chip_open("/dev/gpiochip0")      → Open GPIO controller
+2. gpiod_chip_get_line(gpio_chip, PIN)    → Get GPIO lines:
+   • Pin 17 → Right Indicator
+   • Pin 27 → Left Indicator
+   • Pin 22 → Headlight
+3. gpiod_line_request_output(line, name, 0) → Configure as OUTPUT</code></pre>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <h3><span class="step-number">4</span> Initialize State & Configure poll()</h3>
+                    <div class="card">
+                        <pre><code>ind_state = 0;           // No indicator active
+hl_state = 0;            // Headlight OFF
+
+fds[0].fd = can_socket;  // Monitor CAN socket
+fds[0].events = POLLIN;  // Notify when data ready
+fds[0].revents = 0;      // Clear returned events</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="phase2">
+            <h2>🔄 Phase 2: Main Event Loop</h2>
+
+            <div class="flowchart">
+┌─────────────────────────────────────────────────────────────────────┐
+│                     <span class="highlight-cyan">MAIN EVENT LOOP</span> (while(1))                      │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  <span class="highlight-yellow">STEP A: Wait for Events</span>                                            │
+│  ret = poll(fds, 1, 100);                                           │
+│                                                                     │
+│  • Blocks for UP TO 100 milliseconds                                │
+│  • Returns EARLY if CAN message arrives                             │
+│  • Returns after 100ms if NO message                                │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+         ┌──────────────────────┼──────────────────────┐
+         │                      │                      │
+         ▼                      ▼                      ▼
+      <span class="highlight-red">ret &lt; 0</span>               <span class="highlight-yellow">ret == 0</span>               <span class="highlight-green">ret &gt; 0</span>
+      (ERROR)              (TIMEOUT)              (MESSAGE!)
+         │                      │                      │
+         ▼                      │                      ▼
+┌─────────────────┐             │         ┌─────────────────────────┐
+│ perror("poll")  │             │         │ <span class="highlight-green">STEP B: Check POLLIN</span>    │
+│ break (exit     │             │         │ ─────────────────────── │
+│ loop)           │             │         │ if (fds[0].revents &    │
+└─────────────────┘             │         │     POLLIN)             │
+                                │         │   → Data ready to read  │
+                                │         └───────────┬─────────────┘
+                                │                     │
+                                │                     ▼
+                                │         ┌────────────────────────────┐
+                                │         │ <span class="highlight-cyan">STEP C: Handle CAN Event</span>   │
+                                │         │ ────────────────────────── │
+                                │         │ handle_can_event()         │
+                                │         │                            │
+                                │         │ Inside:                    │
+                                │         │ 1. read(can_socket,        │
+                                │         │    &frame, ...)            │
+                                │         │ 2. Get cmd = frame.        │
+                                │         │    data[0]                 │
+                                │         │ 3. switch(cmd):            │
+                                │         │    LI_ON  → ind_state=1    │
+                                │         │    RI_ON  → ind_state=2    │
+                                │         │    HAZARD_ON → ind_state=3 │
+                                │         │    IND_OFF→ ind_state=0    │
+                                │         │    HL_ON  → hl_state=1     │
+                                │         │    HL_OFF → hl_state=0     │
+                                │         │                            │
+                                │         │ fds[0].revents = 0         │
+                                │         │ (clear for next poll)      │
+                                │         └─────────────┬──────────────┘
+                                │                       │
+                                └───────────────────────┘
+                                           │
+                                           ▼
+                          ┌────────────────────────────────┐
+                          │  <span class="highlight-purple">STEP D: Check Indicator State</span> │
+                          │  if (ind_state != 0)           │
+                          └────────────────┬───────────────┘
+                                           │
+                    ┌──────────────────────┴───────────────────┐
+                    │                                          │
+               <span class="highlight-cyan">ind_state != 0</span>                            <span class="highlight-yellow">ind_state == 0</span>
+            (Indicator ACTIVE)                          (No indicator)
+                    │                                          │
+                    ▼                                          ▼
+    ┌─────────────────────────────────┐           ┌──────────────────────┐
+    │     <span class="highlight-cyan">BLINKING SEQUENCE</span>           │           │ update_outputs(0,0,0)│
+    │     (See Phase 3)               │           │ → All OFF (except HL)│
+    └─────────────────────────────────┘           └──────────────────────┘
+                    │                                          │
+                    └────────────────────┬─────────────────────┘
+                                         │
+                                         ▼
+                              ┌─────────────────────┐
+                              │  <span class="highlight-green">Loop back to STEP A</span>│
+                              └─────────────────────┘
+            </div>
+
+            <div class="card info">
+                <h3>poll() Return Values</h3>
+                <table>
+                    <tr><th>Return Value</th><th>Meaning</th><th>CAN Message?</th></tr>
+                    <tr><td><code>ret &gt; 0</code></td><td>Events occurred - descriptors have data</td><td><span class="badge badge-success">YES</span></td></tr>
+                    <tr><td><code>ret == 0</code></td><td>Timeout - no events within 100ms</td><td><span class="badge badge-warning">NO</span></td></tr>
+                    <tr><td><code>ret &lt; 0</code></td><td>Error occurred</td><td><span class="badge badge-error">ERROR</span></td></tr>
+                </table>
+            </div>
+        </section>
+
+        <section id="phase3">
+            <h2>💡 Phase 3: Blinking Sequence</h2>
+            <p>Executes when <code>ind_state == 1</code> (Left), <code>ind_state == 2</code> (Right), or <code>ind_state == 3</code> (Hazard)</p>
+
+            <div class="flowchart">
+┌─────────────────────────────────────────────────────────────────────┐
+│                        <span class="highlight-cyan">BLINK CYCLE</span>                                  │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  <span class="highlight-green">BLINK ON PHASE</span>                                                     │
+│                                                                     │
+│  1. update_outputs(1)                                               │
+│     • if ind_state == 2 OR 3 → Right GPIO = ON                      │
+│     • if ind_state == 1 OR 3 → Left GPIO = ON                       │
+│     • if ind_state == 3 → BOTH indicators ON (Hazard)               │
+│     • Headlight based on hl_state                                   │
+│                                                                     │
+│  2. usleep(500000) → Wait 500ms (indicator stays ON)                │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  <span class="highlight-yellow">MID-BLINK CAN CHECK #1</span>                                             │
+│                                                                     │
+│  poll(fds, 1, <span class="highlight-purple">0</span>)  ← Timeout = 0 (non-blocking, immediate return)    │
+│                                                                     │
+│  Why? Check if new command arrived during 500ms wait                │
+│  If message available → handle_can_event() → Update state           │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  <span class="highlight-red">BLINK OFF PHASE</span>                                                    │
+│                                                                     │
+│  1. update_outputs(0)                                               │
+│     → Turn indicator OFF (headlight stays based on hl_state)        │
+│                                                                     │
+│  2. usleep(500000) → Wait 500ms (indicator stays OFF)               │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  <span class="highlight-yellow">MID-BLINK CAN CHECK #2</span>                                             │
+│                                                                     │
+│  poll(fds, 1, 0)  ← Another non-blocking check                      │
+│  If message available → handle_can_event() → Update state           │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │
+                                ▼
+                    ┌───────────────────────┐
+                    │  <span class="highlight-green">Return to main loop</span>  │
+                    └───────────────────────┘
+            </div>
+
+            <div class="card warning">
+                <h3>⚠️ Why Mid-Blink CAN Checks?</h3>
+                <p>Without these checks, the system would be <strong>unresponsive for up to 1 second</strong> (500ms ON + 500ms OFF) during blinking. The non-blocking <code>poll(..., 0)</code> ensures the program can respond to new CAN commands immediately.</p>
+            </div>
+        </section>
+
+        <section id="phase4">
+            <h2>🧹 Phase 4: Cleanup</h2>
+            <div class="card">
+                <p>Called when loop exits due to error:</p>
+                <pre><code>cleanup() {
+    close(can_socket);              // Close CAN socket
+    gpiod_line_release(...);        // Release all GPIO lines
+    gpiod_chip_close(gpio_chip);    // Close GPIO controller
+}
+
+return 0;  // Exit successfully</code></pre>
+            </div>
+        </section>
+
+        <section id="timing">
+            <h2>⏱️ Timing Diagram Example</h2>
+            <div class="card">
+                <p>Complete scenario showing program flow:</p>
+            </div>
+            <div class="flowchart">
+<span class="highlight-cyan">Time(ms)</span>   <span class="highlight-yellow">Event</span>                          <span class="highlight-purple">ind_state</span>   <span class="highlight-green">GPIO State</span>
+────────   ─────                          ─────────   ──────────
+   0       Program starts                    0        All OFF
+   0       poll() starts, waiting...         0        All OFF
+ 100       Timeout, no message               0        All OFF
+ 100       poll() starts again...            0        All OFF
+ 
+ <span class="highlight-cyan">150</span>       <span class="highlight-green">CAN message: RI_ON (0x02)</span>         -        -
+ 150       poll() returns immediately        <span class="highlight-purple">2</span>        -
+ 150       handle_can_event() → ind_state=2  2        -
+ 150       ind_state != 0, start blink       2        -
+ 150       update_outputs(1)                 2        <span class="highlight-green">RIGHT=ON</span>
+ 150       usleep(500ms)...                  2        RIGHT=ON
+ 
+ 650       Wake from sleep                   2        RIGHT=ON
+ 650       Mid-blink poll (0ms timeout)      2        -
+ 650       No message, continue              2        -
+ 650       update_outputs(0)                 2        <span class="highlight-red">RIGHT=OFF</span>
+ 650       usleep(500ms)...                  2        RIGHT=OFF
+
+1150       Wake from sleep                   2        RIGHT=OFF
+1150       Mid-blink poll (0ms timeout)      2        -
+1150       No message, continue              2        -
+1150       Loop back to main poll            2        -
+1150       update_outputs(1)                 2        <span class="highlight-green">RIGHT=ON</span>
+         ... (blinking continues)
+
+<span class="highlight-cyan">1200</span>       <span class="highlight-yellow">CAN message: IND_OFF (0x10)</span>       -        -
+1200       poll() returns immediately        <span class="highlight-purple">0</span>        -
+1200       handle_can_event() → ind_state=0  0        -
+1200       ind_state == 0                    0        -
+1200       update_outputs(0)                 0        <span class="highlight-red">All OFF</span>
+1200       Loop back to main poll            0        All OFF
+ ...       (continues waiting)               0        All OFF
+            </div>
+        </section>
+
+        <section id="commands">
+            <h2>📡 CAN Commands Reference</h2>
+            <table>
+                <tr>
+                    <th>Command</th>
+                    <th>Hex Value</th>
+                    <th>Effect</th>
+                </tr>
+                <tr>
+                    <td><code>LI_ON</code></td>
+                    <td><span class="badge badge-info">0x01</span></td>
+                    <td>Left indicator starts blinking</td>
+                </tr>
+                <tr>
+                    <td><code>RI_ON</code></td>
+                    <td><span class="badge badge-info">0x02</span></td>
+                    <td>Right indicator starts blinking</td>
+                </tr>
+                <tr>
+                    <td><code>HAZARD_ON</code></td>
+                    <td><span class="badge badge-error">0x03</span></td>
+                    <td>Both indicators start blinking (Hazard)</td>
+                </tr>
+                <tr>
+                    <td><code>IND_OFF</code></td>
+                    <td><span class="badge badge-warning">0x10</span></td>
+                    <td>Stop all indicator blinking</td>
+                </tr>
+                <tr>
+                    <td><code>HL_ON</code></td>
+                    <td><span class="badge badge-info">0x04</span></td>
+                    <td>Headlight turns ON (steady, no blink)</td>
+                </tr>
+                <tr>
+                    <td><code>HL_OFF</code></td>
+                    <td><span class="badge badge-warning">0x20</span></td>
+                    <td>Headlight turns OFF</td>
+                </tr>
+            </table>
+        </section>
+
+        <footer style="text-align: center; margin-top: 3rem; padding: 1rem; color: var(--text-secondary);">
+            <p>Generated for <code>bcm3.c</code> | CAN-based Body Control Module Documentation</p>
+        </footer>
+    </div>
+</body>
+</html>
