@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/CMakeFiles/bootloader"
+		},
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/CMakeFiles/bootloader.rule"
+		},
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/CMakeFiles/bootloader-complete.rule"
+		},
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule"
+		},
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule"
+		},
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule"
+		},
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule"
+		},
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule"
+		},
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule"
+		},
+		{
+			"file" : "/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/bcm/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"bootloader"
+		],
+		"name" : "bootloader"
+	}
+}

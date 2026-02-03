@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/CMakeFiles/bootloader
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/CMakeFiles/bootloader.rule
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/CMakeFiles/bootloader-complete.rule
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/seatbelt/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

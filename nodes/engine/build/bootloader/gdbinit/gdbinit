@@ -1,0 +1,2 @@
+source /mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/engine/build/bootloader/gdbinit/symbols
+source /mnt/bhuvi/Projects/rpi/can-protocol/test4/nodes/engine/build/bootloader/gdbinit/connect
